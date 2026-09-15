@@ -1,0 +1,18 @@
+# abloh.yml - CI reads this from the PR merge base, so changes are reviewed like code.
+# Keys: https://abloh.dev/docs#config
+
+# % of mechanical breaks in changed lines your tests must catch.
+threshold: 70
+
+# true: below threshold fails abloh's check in CI. Blocks merges only if also
+# marked required in branch protection.
+enforce: true
+
+# How CI rebuilds this project for abloh's check. Comments name the source file.
+environment:
+  runtimeImage: node:24.21.0-bookworm-slim@sha256:2fe369e969550cde8e867afc3fe370b260140cab4a23d467074295b42163d553 # Node 24.21.0 resolved from the official Node images (node-version lts/* in your CI), pinned to the digest it names today
+  installDirectory: .
+  setup: .abloh/setup.sh # written by init and yours to edit. Every cold run executes it step by step
+  testCommand: corepack pnpm run test:vitest # set by you
+  identityFiles: # a change here makes CI reinstall instead of reusing its image
+    - pnpm-workspace.yaml
